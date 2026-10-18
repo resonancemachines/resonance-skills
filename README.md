@@ -1,6 +1,5 @@
 # Resonance Platform Agent Skills Suite
 
-[![skills.sh](https://skills.sh/b/resonancemachines/resonance-skills)](https://skills.sh/resonancemachines/resonance-skills)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 <div align="center">

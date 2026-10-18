@@ -18,13 +18,13 @@ Use this skill when designing, publishing, consuming, or governing asynchronous 
 
 | Dimension | Platform Standard | Authority |
 |:--|:--|:--|
-| **Event Interface Definition (IDL)** | Protocol Buffers (`proto3`) | [ADR-0008](docs/adr/ADR-0008-asyncapi-apicurio-event-contract-governance.md) |
-| **Mesh Channel Topology** | AsyncAPI 3.0 (`asyncapi.yaml`) | [ADR-0008](docs/adr/ADR-0008-asyncapi-apicurio-event-contract-governance.md) |
-| **Schema & Contract Registry** | Apicurio Registry 3.x (`http://localhost:8086/apis/registry/v3`) | [ADR-0008](docs/adr/ADR-0008-asyncapi-apicurio-event-contract-governance.md), [ADR-0010](docs/adr/ADR-0010-target-infrastructure-topology-and-governance.md) |
+| **Event Interface Definition (IDL)** | Protocol Buffers (`proto3`) | `ADR-0008` (AsyncAPI & Apicurio Contract Governance) |
+| **Mesh Channel Topology** | AsyncAPI 3.0 (`asyncapi.yaml`) | `ADR-0008` (AsyncAPI & Apicurio Contract Governance) |
+| **Schema & Contract Registry** | Apicurio Registry 3.x (`http://localhost:8086/apis/registry/v3`) | `ADR-0008`, `ADR-0010` (Target Infrastructure Topology) |
 | **Schema Compatibility Rule** | `BACKWARD_TRANSITIVE` + `VALIDITY: FULL` | Apicurio Rule Enforcement |
-| **Domain Catalog & Governance** | OpenMetadata Entity Standard + Apicurio Artifact | [ADR-0011](docs/adr/ADR-0011-domain-aggregate-governance-with-openmetadata.md) |
-| **Partition Key Topology** | `{tenantId}:{aggregateType}:{aggregateId}[#{saltBucket}]` | DDIA Ch. 6 & [ADR-0011](docs/adr/ADR-0011-domain-aggregate-governance-with-openmetadata.md) |
-| **Reliable Publishing Engine** | PostgreSQL WAL CDC via Debezium `EventRouter` (`outbox_events`) | [ADR-0001](docs/adr/ADR-0001-transactional-outbox-event-structure.md) |
+| **Domain Catalog & Governance** | OpenMetadata Entity Standard + Apicurio Artifact | `ADR-0011` (Domain Aggregate Governance) |
+| **Partition Key Topology** | `{tenantId}:{aggregateType}:{aggregateId}[#{saltBucket}]` | DDIA Ch. 6 & `ADR-0011` |
+| **Reliable Publishing Engine** | PostgreSQL WAL CDC via Debezium `EventRouter` (`outbox_events`) | `ADR-0001` (Transactional Outbox Event Structure) |
 
 ---
 
@@ -51,8 +51,8 @@ Contract-mesh components and event listeners must honor cloud-native Twelve-Fact
 ## 3. Domain Aggregate Root Catalog Governance
 
 All event emissions MUST be associated with an authorized **Domain Aggregate Root** registered in:
-*   OpenMetadata Declarative Manifest: [`deploy/openmetadata/domain-glossary-manifest.json`](deploy/openmetadata/domain-glossary-manifest.json)
-*   Contract Specification Catalog: [`.agents/.contracts/domain-catalog.yaml`](.agents/.contracts/domain-catalog.yaml)
+*   OpenMetadata Declarative Manifest: `deploy/openmetadata/domain-glossary-manifest.json`
+*   Contract Specification Catalog: `.agents/.contracts/domain-catalog.yaml`
 *   Apicurio Registry 3.x: Group `com.resonancemachines.catalog`, Artifact `domain-aggregate-catalog`
 
 ### Skew Mitigation & Salt Bucket Matrix (DDIA Ch. 6)
