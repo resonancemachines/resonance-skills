@@ -1,0 +1,37 @@
+{
+  "name": "@resonancemachines/skills",
+  "version": "1.0.0",
+  "description": "Enterprise Microservices Architecture & Contract-First Event Mesh AI agent skills suite for the Resonance Platform",
+  "main": "bin/cli.js",
+  "bin": {
+    "resonance-skills": "bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "test": "node bin/cli.js --list"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resonancemachines/resonance-skills.git"
+  },
+  "keywords": [
+    "ai-agent",
+    "skills",
+    "antigravity",
+    "claude-code",
+    "cursor",
+    "gemini",
+    "microservices",
+    "spring-boot",
+    "apicurio",
+    "asyncapi",
+    "protobuf",
+    "openmetadata"
+  ],
+  "author": "Resonance Machines",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/resonancemachines/resonance-skills/issues"
+  },
+  "homepage": "https://github.com/resonancemachines/resonance-skills#readme"
+}
