@@ -58,6 +58,8 @@ Install a single selected skill:
 npx skills add resonancemachines/resonance-skills --skill resonance-developer
 # or
 npx skills add resonancemachines/resonance-skills --skill resonance-contract-mesh
+# or
+npx skills add resonancemachines/resonance-skills --skill resonance-guardrail-auditor
 ```
 
 Install globally (available across all projects on your machine):
@@ -86,6 +88,7 @@ npx github:resonancemachines/resonance-skills -g
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`resonance-developer`** | [`SKILL.md`](resonance-developer/SKILL.md) | [`full`](resonance-developer/resonance-developer.md) | [`mini`](resonance-developer/resonance-developer.mini.md) | [`nano`](resonance-developer/resonance-developer.nano.md) | 9 Architectural Invariants, 12-Factor MSA, Spec-Config-Code Triad, JPA Safety, 14 Guardrails |
 | **`resonance-contract-mesh`** | [`SKILL.md`](resonance-contract-mesh/SKILL.md) | [`full`](resonance-contract-mesh/resonance-contract-mesh.md) | [`mini`](resonance-contract-mesh/resonance-contract-mesh.mini.md) | [`nano`](resonance-contract-mesh/resonance-contract-mesh.nano.md) | AsyncAPI 3.0, Protobuf (`proto3`), Apicurio Registry 3.x, OpenMetadata Catalog, DDIA Ch. 6 Salting |
+| **`resonance-guardrail-auditor`** | [`SKILL.md`](resonance-guardrail-auditor/SKILL.md) | [`full`](resonance-guardrail-auditor/resonance-guardrail-auditor.md) | [`mini`](resonance-guardrail-auditor/resonance-guardrail-auditor.mini.md) | [`nano`](resonance-guardrail-auditor/resonance-guardrail-auditor.nano.md) | 14 Executable Architecture Guardrails, Diagnosis & Triage, SDLC Hard Gates, Zero-Tolerance Compliance |
 
 ---
 

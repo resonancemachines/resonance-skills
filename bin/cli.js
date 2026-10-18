@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const SKILLS = ['resonance-developer', 'resonance-contract-mesh'];
+const SKILLS = ['resonance-developer', 'resonance-contract-mesh', 'resonance-guardrail-auditor'];
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 const args = process.argv.slice(2);
