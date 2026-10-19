@@ -1,5 +1,7 @@
 # Resonance Guardrail Auditor Triage Guide (`mini`)
 
+All 14 guardrails are specified in detail in [`GUARDRAILS.md`](../docs/guardrails/GUARDRAILS.md).
+
 ## When to use
 Use before concluding any implementation task, submitting a PR, or when `./deploy/scripts/enforce-architecture-guardrails.sh` reports a failure.
 

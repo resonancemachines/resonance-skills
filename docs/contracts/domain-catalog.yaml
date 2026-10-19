@@ -1,0 +1,187 @@
+# ==============================================================================
+# Resonance Platform — Domain Aggregate Root Catalog (SSOT)
+# ==============================================================================
+# Governed by: ADR-0011 (OpenMetadata Enterprise Domain Catalog & Partitioning)
+# Synchronized with: deploy/openmetadata/domain-glossary-manifest.json
+# Standard Format: {tenantId}:{aggregateType}:{aggregateId}[#{saltBucket}]
+# ==============================================================================
+
+version: "1.0"
+glossary: "ResonanceDomainCatalog"
+
+domains:
+  StorageAndVFS:
+    bounded_context: "resonance-vfs"
+    aggregates:
+      VFS_NODE:
+        id_field: "nodeId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.VFS_NODE"
+      VFS_DOCUMENT:
+        id_field: "documentId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.VFS_DOCUMENT"
+      DOCUMENT_METADATA:
+        id_field: "metadataId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.DOCUMENT_METADATA"
+      DOCUMENT_CHUNK:
+        id_field: "chunkId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "MEDIUM"
+        default_salt_buckets: 4
+        cdc_topic: "resonance.outbox.DOCUMENT_CHUNK"
+
+  OperationalIngress:
+    bounded_context: "resonance-action"
+    aggregates:
+      INTENT:
+        id_field: "intentId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.INTENT"
+      DOWNLOAD_SESSION:
+        id_field: "sessionId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.DOWNLOAD_SESSION"
+      NOTIFICATION:
+        id_field: "notificationId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.NOTIFICATION"
+
+  ReliabilityAndSupport:
+    bounded_context: "resonance-support"
+    aggregates:
+      INCIDENT_TICKET:
+        id_field: "ticketId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.INCIDENT_TICKET"
+      DLQ_QUARANTINE:
+        id_field: "quarantineId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.DLQ_QUARANTINE"
+      SUPPORT_TASK:
+        id_field: "taskId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.SUPPORT_TASK"
+
+  OrganizationAndIdentity:
+    bounded_context: "resonance-org"
+    aggregates:
+      ORGANIZATION:
+        id_field: "orgId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.ORGANIZATION"
+      WORKSPACE:
+        id_field: "workspaceId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.WORKSPACE"
+      WORKSPACE_USER:
+        id_field: "membershipId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.WORKSPACE_USER"
+
+  WorkflowAndOrchestration:
+    bounded_context: "resonance-workflow"
+    aggregates:
+      SAGA_INSTANCE:
+        id_field: "sagaId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.SAGA_INSTANCE"
+      APPROVAL_TASK:
+        id_field: "approvalId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.APPROVAL_TASK"
+      COMPUTE_JOB:
+        id_field: "jobId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.COMPUTE_JOB"
+
+  SemanticBrain:
+    bounded_context: "resonance-unified-context"
+    aggregates:
+      SUBGRAPH_SCHEMA:
+        id_field: "schemaId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.SUBGRAPH_SCHEMA"
+      CONTEXT_NODE:
+        id_field: "nodeUri"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "HIGH"
+        default_salt_buckets: 16
+        cdc_topic: "resonance.outbox.CONTEXT_NODE"
+
+  SecurityAndCryptography:
+    bounded_context: "resonance-crypto"
+    aggregates:
+      TOKEN_VAULT_ENTRY:
+        id_field: "tokenId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.TOKEN_VAULT_ENTRY"
+      FILE_ENTITLEMENT:
+        id_field: "entitlementId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.FILE_ENTITLEMENT"
+
+  ControlBillingAndEgress:
+    bounded_context: "resonance-control"
+    aggregates:
+      CONTROL_PLANE:
+        id_field: "policyId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.CONTROL_PLANE"
+      USAGE_METER:
+        id_field: "meterId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "MEDIUM"
+        default_salt_buckets: 8
+        cdc_topic: "resonance.outbox.USAGE_METER"
+      DELIVERY_PRODUCT:
+        id_field: "productId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.DELIVERY_PRODUCT"
+      WEBHOOK_DISPATCH:
+        id_field: "dispatchId"
+        causal_scope: "PER_AGGREGATE_INSTANCE"
+        celebrity_skew_risk: "LOW"
+        default_salt_buckets: 1
+        cdc_topic: "resonance.outbox.WEBHOOK_DISPATCH"

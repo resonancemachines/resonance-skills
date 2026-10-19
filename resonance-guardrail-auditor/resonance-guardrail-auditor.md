@@ -1,6 +1,6 @@
 # Resonance Platform — Architecture Guardrail Auditor (`resonance-guardrail-auditor`)
 
-The `resonance-guardrail-auditor` skill provides authoritative diagnosis, automated auditing, and deterministic remediation playbooks for all **14 Executable Architecture Guardrails** across the Resonance Platform.
+The `resonance-guardrail-auditor` skill provides authoritative diagnosis, automated auditing, and deterministic remediation playbooks for all **[14 Executable Architecture Guardrails](../docs/guardrails/GUARDRAILS.md)** across the Resonance Platform.
 
 ---
 
@@ -14,7 +14,7 @@ The `resonance-guardrail-auditor` skill provides authoritative diagnosis, automa
 | **GR-04** | Triad Contract | Schema drift between docs, configs, and connectors | Apicurio 3.x, Protobuf `proto3`, AsyncAPI 3.0 check |
 | **GR-05** | Documentation | Broken ADR symlinks or superseded draft files | Symlink integrity & file existence audit |
 | **GR-06** | Task Tracking | Premature `[x]` checkmarks in `PLAN.md` / `task.md` | Physical disk presence verification of deliverables |
-| **GR-07** | Target Infra | Blueprint desynchronization with ADR-0010 | Synchronization check across architecture docs |
+| **GR-07** | Target Infra | Blueprint desynchronization with [`ADR-0010`](../docs/adr/0010-target-infrastructure-topology-and-governance.md) | Synchronization check across architecture docs |
 | **GR-08** | Spring DI / JPA | Field `@Autowired` or missing `open-in-view=false` | Static AST scan; constructor injection enforcement |
 | **GR-09** | API Boundary | Returning raw JPA `@Entity` from `@RestController` | AST scan checking method signatures for Record DTOs |
 | **GR-10** | JPA Integrity | `@Data`, `FetchType.EAGER`, `EnumType.ORDINAL`, primitive `@Version` | Entity annotation hygiene audit |
@@ -57,7 +57,7 @@ Stage 5: Remote CI/CD Pipeline (Hard Gate)
      ```
   3. Ensure JPA default no-arg constructors explicitly set `this.tenantId = null;`.
 
-### GR-02: ADR-0001 Debezium WAL CDC Outbox Purity
+### GR-02: [ADR-0001](../docs/adr/0001-transactional-outbox-event-structure.md) Debezium WAL CDC Outbox Purity
 * **Failure Symptom:** `ADR-0001 Violation: OutboxEvent entity contains banned polling field`.
 * **Root Cause:** Fields like `processed`, `processedAt`, `retryCount`, or `lastError` were added to an `OutboxEvent` entity.
 * **Remediation:** Remove polling fields. Debezium reads directly from PostgreSQL WAL logs via logical decoding (`pgoutput`). Use an append-only, zero-polling entity:

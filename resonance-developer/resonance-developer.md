@@ -4,7 +4,7 @@ description: >
   Official all-in-one Enterprise Microservices Architecture (MSA) development skill for the Resonance Platform (https://github.com/resonancemachines).
   Activate this skill when creating, modifying, refactoring, or reviewing Java/Spring Boot microservices, REST controllers, JPA entities,
   Transactional Outbox events, gRPC services, or Choreographed Sagas in the Resonance Platform repository.
-  Enforces all 9 Architectural Invariants, the Spec-Config-Code Triad, and the 14 Executable Guardrails (GUARDRAILS.md).
+  Enforces all 9 Architectural Invariants, the Spec-Config-Code Triad, and the 14 Executable Guardrails ([GUARDRAILS.md](../docs/guardrails/GUARDRAILS.md)).
 ---
 
 # Resonance Developer Skill (`resonance-developer`)
@@ -20,7 +20,7 @@ Every code change must adhere to the 9 Core Platform Invariants:
 
 1. **No Two-Phase Commit (GR-03):**
    * Never import or configure `javax.transaction.xa`, `jakarta.transaction.xa`, `XADataSource`, or `XAResource`.
-   * Distributed transactions strictly use **Choreographed Sagas** with explicit compensating transactions (`resonance-workflow`) and Transactional Outbox CDC (`ADR-0001`).
+   * Distributed transactions strictly use **Choreographed Sagas** with explicit compensating transactions (`resonance-workflow`) and Transactional Outbox CDC ([`ADR-0001`](../docs/adr/0001-transactional-outbox-event-structure.md)).
 2. **Fail-Closed Multi-Tenant Isolation (GR-01):**
    * **NEVER** write `"default-tenant"`, `"tenant-default"`, or `"default_tenant"` anywhere under `src/main/java`.
    * Every ingress controller, gRPC handler, and `OutboxEvent` parameterized constructor MUST validate `tenantId` via:
@@ -68,7 +68,7 @@ Every microservice in the Resonance Platform must strictly adhere to the Twelve-
 | **II. Dependencies** | Fully declared and isolated via `resonance-bom`. Zero rogue `<version>` tags. | Invariant 5 (BOM) |
 | **III. Config** | **Zero hardcoded credentials or ports.** All properties MUST support environment variable overrides: `${SPRING_DATASOURCE_URL:...}`, `${KAFKA_BOOTSTRAP_SERVERS:...}`. | Config Audit |
 | **IV. Backing Services** | Databases, Redpanda, MinIO, Vault, and Apicurio are attached resources referenced via URL/credentials. | Attached Resources |
-| **V. Build, Release, Run** | Immutable container images via Docker multi-stage builds (`Dockerfile.jvm`), GitOps CD via ArgoCD. | ADR-0010 |
+| **V. Build, Release, Run** | Immutable container images via Docker multi-stage builds (`Dockerfile.jvm`), GitOps CD via ArgoCD. | [`ADR-0010`](../docs/adr/0010-target-infrastructure-topology-and-governance.md) |
 | **VI. Processes** | Microservices are strictly **stateless processes**. Zero sticky in-memory sessions; shared state resides in Postgres / Neo4j / Redis. | Share-Nothing Architecture |
 | **VII. Port Binding** | Microservices export services by binding to ports (HTTP `8001..8205`, gRPC `9001..9205`). | Embedded Netty/Tomcat |
 | **VIII. Concurrency** | Horizontal scaling via Kubernetes HPA and Kafka partition consumer concurrency (`spring.kafka.listener.concurrency`). | Process Model |

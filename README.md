@@ -92,6 +92,26 @@ npx github:resonancemachines/resonance-skills -g
 
 ---
 
+## Embedded Architecture Specifications & ADRs
+
+The skills in this suite are grounded in canonical architecture standards, decision records, and executable guardrails embedded directly in this repository so they are fully readable without external permissions:
+
+| Document | Description | Embedded Reference |
+| :--- | :--- | :--- |
+| **`GUARDRAILS.md`** | 14 Executable Architecture & Change-Management Guardrails | [`docs/guardrails/GUARDRAILS.md`](docs/guardrails/GUARDRAILS.md) |
+| **`ARCHITECTURE.md`** | Resonance Platform Core Architecture Specification | [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) |
+| **`CONTRACTS.md`** | Event Mesh Contracts & Topology Specification | [`docs/contracts/CONTRACTS.md`](docs/contracts/CONTRACTS.md) |
+| **`domain-catalog.yaml`** | Domain Aggregate Root & Schema Catalog | [`docs/contracts/domain-catalog.yaml`](docs/contracts/domain-catalog.yaml) |
+| **`domain-glossary-manifest.json`** | OpenMetadata Glossary & Domain Manifest | [`docs/contracts/domain-glossary-manifest.json`](docs/contracts/domain-glossary-manifest.json) |
+| **`HARNESS_ENGINEERING.md`** | Continuous Harness Engineering & Verification Framework | [`docs/HARNESS_ENGINEERING.md`](docs/HARNESS_ENGINEERING.md) |
+| **`ADR-0001`** | Transactional Outbox Event Structure & CDC | [`docs/adr/0001-transactional-outbox-event-structure.md`](docs/adr/0001-transactional-outbox-event-structure.md) |
+| **`ADR-0008`** | AsyncAPI 3.0 & Apicurio Registry Contract Governance | [`docs/adr/0008-asyncapi-apicurio-event-contract-governance.md`](docs/adr/0008-asyncapi-apicurio-event-contract-governance.md) |
+| **`ADR-0009`** | Executable Architecture Guardrails & Triad Protocol | [`docs/adr/0009-executable-architecture-and-change-management-guardrails.md`](docs/adr/0009-executable-architecture-and-change-management-guardrails.md) |
+| **`ADR-0010`** | Target Infrastructure Topology & Governance | [`docs/adr/0010-target-infrastructure-topology-and-governance.md`](docs/adr/0010-target-infrastructure-topology-and-governance.md) |
+| **`ADR-0011`** | Domain Aggregate Governance with OpenMetadata | [`docs/adr/0011-domain-aggregate-governance-with-openmetadata.md`](docs/adr/0011-domain-aggregate-governance-with-openmetadata.md) |
+
+---
+
 ## Architectural Invariants (Overview)
 
 The skills bundled in this suite enforce the 9 non-negotiable architectural invariants of the Resonance Platform:

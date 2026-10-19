@@ -4,7 +4,7 @@
 Use during daily microservice feature development, bug fixes, refactoring, code reviews, and schema migrations across the Resonance Platform.
 
 ## 9 Non-Negotiable Invariants
-1. **Zero 2PC (GR-03):** Never import `javax.transaction.xa`, `jakarta.transaction.xa`, or `XAResource`. Distributed coordination uses Choreographed Sagas and Transactional Outbox CDC (`ADR-0001`).
+1. **Zero 2PC (GR-03):** Never import `javax.transaction.xa`, `jakarta.transaction.xa`, or `XAResource`. Distributed coordination uses Choreographed Sagas and Transactional Outbox CDC ([`ADR-0001`](../docs/adr/0001-transactional-outbox-event-structure.md)).
 2. **Fail-Closed Multi-Tenancy (GR-01):** Zero `"default-tenant"` placeholders in production code. All ingress points and parameterized outbox constructors must enforce `TenantGuard.requireTenantId(tenantId)`. JPA no-arg constructors must leave `tenantId = null`.
 3. **Zero Plaintext PII:** Tokenize all sensitive sensory data at the edge via `resonance-crypto` before emitting events or writing to graphs.
 4. **Database-Per-Service:** Zero cross-service SQL joins or shared schemas. Communicate strictly via gRPC (`proto3`) or Redpanda topics.
@@ -25,5 +25,5 @@ Use during daily microservice feature development, bug fixes, refactoring, code 
 2. Persistence: Flyway V{N}__*.sql + Strict Lazy JPA Entity
 3. Core Domain: DomainPartitionKey + Transactional Outbox (BYTEA payload)
 4. Ingress/Egress: Record DTO REST Controller + gRPC Deadline Budget
-5. Verification: mvn test + ./deploy/scripts/enforce-architecture-guardrails.sh (14/14 PASS)
+5. Verification: mvn test + ./deploy/scripts/enforce-architecture-guardrails.sh ([GUARDRAILS.md](../docs/guardrails/GUARDRAILS.md): 14/14 PASS)
 ```

@@ -1,0 +1,437 @@
+{
+  "glossary": {
+    "name": "ResonanceDomainCatalog",
+    "displayName": "Resonance Platform Domain Aggregate Catalog",
+    "description": "Enterprise catalog of 22 Domain Aggregate Roots across 8 Bounded Contexts governing Transactional Outbox CDC routing and Kafka partition keys per Vernon IDDD and DDIA Ch. 6.",
+    "mutuallyExclusive": false,
+    "tags": ["Architecture.DDD", "Platform.Resonance", "Data.Mesh"]
+  },
+  "domains": [
+    {
+      "name": "StorageAndVFS",
+      "displayName": "Storage & Virtual File System (VFS)",
+      "description": "Hierarchical document storage, node management, chunking, and file metadata ingestion."
+    },
+    {
+      "name": "OperationalIngress",
+      "displayName": "Operational Ingress & Actions",
+      "description": "User and AI agent intent signaling, action telemetry, and transient download streaming."
+    },
+    {
+      "name": "ReliabilityAndSupport",
+      "displayName": "Reliability & Operational Support",
+      "description": "Incident ticket resolution, poisoned event dead-letter quarantine (DLQ), and support task assignment."
+    },
+    {
+      "name": "OrganizationAndIdentity",
+      "displayName": "Organization & Identity",
+      "description": "Tenant organization root boundaries, workspaces, and team access memberships."
+    },
+    {
+      "name": "WorkflowAndOrchestration",
+      "displayName": "Workflow & Saga Orchestration",
+      "description": "Long-running choreographed/orchestrated distributed sagas, approval gates, and heavy background compute jobs."
+    },
+    {
+      "name": "SemanticBrain",
+      "displayName": "Semantic Brain & Knowledge Graph",
+      "description": "Unified context graph, Schema.org entity projections, ontology subgraphs, and vector embeddings."
+    },
+    {
+      "name": "SecurityAndCryptography",
+      "displayName": "Security & Cryptography",
+      "description": "Token vault entries for PII tokenization and cryptographic file entitlement policies."
+    },
+    {
+      "name": "ControlBillingAndEgress",
+      "displayName": "Control Plane, Metering & Webhooks",
+      "description": "Service mesh feature gates, tenant token usage metering, streaming delivery products, and outbound webhook delivery."
+    }
+  ],
+  "terms": [
+    {
+      "name": "VFS_NODE",
+      "displayName": "VFS Node",
+      "domain": "StorageAndVFS",
+      "description": "Hierarchical folder and directory tree node aggregate in the Virtual File System.",
+      "customProperties": {
+        "boundedContext": "resonance-vfs",
+        "idField": "nodeId",
+        "partitionKeyPattern": "{tenantId}:VFS_NODE:{nodeId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.VFS_NODE",
+        "asyncApiChannel": "resonance.vfs.node.v1"
+      }
+    },
+    {
+      "name": "VFS_DOCUMENT",
+      "displayName": "VFS Document",
+      "domain": "StorageAndVFS",
+      "description": "Logical document aggregate representing staged and committed files.",
+      "customProperties": {
+        "boundedContext": "resonance-vfs",
+        "idField": "documentId",
+        "partitionKeyPattern": "{tenantId}:VFS_DOCUMENT:{documentId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.VFS_DOCUMENT",
+        "asyncApiChannel": "resonance.vfs.document.v1"
+      }
+    },
+    {
+      "name": "DOCUMENT_METADATA",
+      "displayName": "Document Metadata",
+      "domain": "StorageAndVFS",
+      "description": "Extracted MIME types, checksums, author attributes, and structural tags.",
+      "customProperties": {
+        "boundedContext": "resonance-vfs",
+        "idField": "metadataId",
+        "partitionKeyPattern": "{tenantId}:DOCUMENT_METADATA:{metadataId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.DOCUMENT_METADATA",
+        "asyncApiChannel": "resonance.vfs.metadata.v1"
+      }
+    },
+    {
+      "name": "DOCUMENT_CHUNK",
+      "displayName": "Document Chunk",
+      "domain": "StorageAndVFS",
+      "description": "Text partition chunk split for embedding generation and vector search indexing.",
+      "customProperties": {
+        "boundedContext": "resonance-vfs",
+        "idField": "chunkId",
+        "partitionKeyPattern": "{tenantId}:DOCUMENT_CHUNK:{chunkId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "MEDIUM",
+        "defaultSaltBuckets": 4,
+        "cdcOutboxTopic": "resonance.outbox.DOCUMENT_CHUNK",
+        "asyncApiChannel": "resonance.vfs.chunk.v1"
+      }
+    },
+    {
+      "name": "INTENT",
+      "displayName": "User & Agent Intent",
+      "domain": "OperationalIngress",
+      "description": "Operational ingress intent aggregate representing user requests, commands, or telemetry actions.",
+      "customProperties": {
+        "boundedContext": "resonance-action",
+        "idField": "intentId",
+        "partitionKeyPattern": "{tenantId}:INTENT:{intentId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.INTENT",
+        "asyncApiChannel": "resonance.action.intent.v1"
+      }
+    },
+    {
+      "name": "DOWNLOAD_SESSION",
+      "displayName": "Download Session",
+      "domain": "OperationalIngress",
+      "description": "Transient egress file streaming token and download tracking session.",
+      "customProperties": {
+        "boundedContext": "resonance-upload",
+        "idField": "sessionId",
+        "partitionKeyPattern": "{tenantId}:DOWNLOAD_SESSION:{sessionId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.DOWNLOAD_SESSION",
+        "asyncApiChannel": "resonance.upload.session.v1"
+      }
+    },
+    {
+      "name": "NOTIFICATION",
+      "displayName": "User Notification",
+      "domain": "OperationalIngress",
+      "description": "Real-time user notification and alert aggregate for SSE and reactive dispatch.",
+      "customProperties": {
+        "boundedContext": "resonance-action",
+        "idField": "notificationId",
+        "partitionKeyPattern": "{tenantId}:NOTIFICATION:{notificationId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.NOTIFICATION",
+        "asyncApiChannel": "resonance.action.notification.v1"
+      }
+    },
+    {
+      "name": "INCIDENT_TICKET",
+      "displayName": "Incident Ticket",
+      "domain": "ReliabilityAndSupport",
+      "description": "Front-office customer support incident and remediation ticket.",
+      "customProperties": {
+        "boundedContext": "resonance-support",
+        "idField": "ticketId",
+        "partitionKeyPattern": "{tenantId}:INCIDENT_TICKET:{ticketId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.INCIDENT_TICKET",
+        "asyncApiChannel": "resonance.support.ticket.v1"
+      }
+    },
+    {
+      "name": "DLQ_QUARANTINE",
+      "displayName": "Dead-Letter Quarantine",
+      "domain": "ReliabilityAndSupport",
+      "description": "Poison pill / invalid event quarantine envelope isolated for operator review.",
+      "customProperties": {
+        "boundedContext": "resonance-support",
+        "idField": "quarantineId",
+        "partitionKeyPattern": "{tenantId}:DLQ_QUARANTINE:{quarantineId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.DLQ_QUARANTINE",
+        "asyncApiChannel": "resonance.support.dlq.v1"
+      }
+    },
+    {
+      "name": "SUPPORT_TASK",
+      "displayName": "Support Task",
+      "domain": "ReliabilityAndSupport",
+      "description": "Technician assignment, troubleshooting checklist, or escalation task.",
+      "customProperties": {
+        "boundedContext": "resonance-support",
+        "idField": "taskId",
+        "partitionKeyPattern": "{tenantId}:SUPPORT_TASK:{taskId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.SUPPORT_TASK",
+        "asyncApiChannel": "resonance.support.task.v1"
+      }
+    },
+    {
+      "name": "ORGANIZATION",
+      "displayName": "Organization",
+      "domain": "OrganizationAndIdentity",
+      "description": "Enterprise tenant boundary root entity encapsulating billing, security, and workspaces.",
+      "customProperties": {
+        "boundedContext": "resonance-org",
+        "idField": "orgId",
+        "partitionKeyPattern": "{tenantId}:ORGANIZATION:{orgId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.ORGANIZATION",
+        "asyncApiChannel": "resonance.org.organization.v1"
+      }
+    },
+    {
+      "name": "WORKSPACE",
+      "displayName": "Workspace",
+      "domain": "OrganizationAndIdentity",
+      "description": "Team or departmental workspace container within an organization.",
+      "customProperties": {
+        "boundedContext": "resonance-org",
+        "idField": "workspaceId",
+        "partitionKeyPattern": "{tenantId}:WORKSPACE:{workspaceId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.WORKSPACE",
+        "asyncApiChannel": "resonance.org.workspace.v1"
+      }
+    },
+    {
+      "name": "WORKSPACE_USER",
+      "displayName": "Workspace User Membership",
+      "domain": "OrganizationAndIdentity",
+      "description": "User role assignment, team membership, and permission binding within a workspace.",
+      "customProperties": {
+        "boundedContext": "resonance-org",
+        "idField": "membershipId",
+        "partitionKeyPattern": "{tenantId}:WORKSPACE_USER:{membershipId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.WORKSPACE_USER",
+        "asyncApiChannel": "resonance.org.membership.v1"
+      }
+    },
+    {
+      "name": "SAGA_INSTANCE",
+      "displayName": "Saga Instance",
+      "domain": "WorkflowAndOrchestration",
+      "description": "Distributed saga execution aggregate coordinating multi-service transactions with compensating actions.",
+      "customProperties": {
+        "boundedContext": "resonance-workflow",
+        "idField": "sagaId",
+        "partitionKeyPattern": "{tenantId}:SAGA_INSTANCE:{sagaId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.SAGA_INSTANCE",
+        "asyncApiChannel": "resonance.workflow.saga.v1"
+      }
+    },
+    {
+      "name": "APPROVAL_TASK",
+      "displayName": "Approval Task",
+      "domain": "WorkflowAndOrchestration",
+      "description": "Human-in-the-loop approval decision and policy gate aggregate.",
+      "customProperties": {
+        "boundedContext": "resonance-approval",
+        "idField": "approvalId",
+        "partitionKeyPattern": "{tenantId}:APPROVAL_TASK:{approvalId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.APPROVAL_TASK",
+        "asyncApiChannel": "resonance.approval.task.v1"
+      }
+    },
+    {
+      "name": "COMPUTE_JOB",
+      "displayName": "Compute Job",
+      "domain": "WorkflowAndOrchestration",
+      "description": "Asynchronous background compute job, batch indexing, or LLM fine-tuning task.",
+      "customProperties": {
+        "boundedContext": "resonance-workflow",
+        "idField": "jobId",
+        "partitionKeyPattern": "{tenantId}:COMPUTE_JOB:{jobId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.COMPUTE_JOB",
+        "asyncApiChannel": "resonance.workflow.job.v1"
+      }
+    },
+    {
+      "name": "SUBGRAPH_SCHEMA",
+      "displayName": "Subgraph Schema",
+      "domain": "SemanticBrain",
+      "description": "Knowledge graph ontology definition, entity types, and edge relationship schemas.",
+      "customProperties": {
+        "boundedContext": "resonance-unified-context",
+        "idField": "schemaId",
+        "partitionKeyPattern": "{tenantId}:SUBGRAPH_SCHEMA:{schemaId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.SUBGRAPH_SCHEMA",
+        "asyncApiChannel": "resonance.context.schema.v1"
+      }
+    },
+    {
+      "name": "CONTEXT_NODE",
+      "displayName": "Context Node",
+      "domain": "SemanticBrain",
+      "description": "High-density entity graph node projected from domain events (Schema.org aligned, high celebrity skew risk).",
+      "customProperties": {
+        "boundedContext": "resonance-unified-context",
+        "idField": "nodeUri",
+        "partitionKeyPattern": "{tenantId}:CONTEXT_NODE:{nodeUri}#{saltBucket}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "HIGH",
+        "defaultSaltBuckets": 16,
+        "cdcOutboxTopic": "resonance.outbox.CONTEXT_NODE",
+        "asyncApiChannel": "resonance.context.node.v1"
+      }
+    },
+    {
+      "name": "TOKEN_VAULT_ENTRY",
+      "displayName": "Token Vault Entry",
+      "domain": "SecurityAndCryptography",
+      "description": "Detokenized PII record stored encrypted in HashiCorp Vault / resonance-crypto.",
+      "customProperties": {
+        "boundedContext": "resonance-crypto",
+        "idField": "tokenId",
+        "partitionKeyPattern": "{tenantId}:TOKEN_VAULT_ENTRY:{tokenId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.TOKEN_VAULT_ENTRY",
+        "asyncApiChannel": "resonance.crypto.vault.v1"
+      }
+    },
+    {
+      "name": "FILE_ENTITLEMENT",
+      "displayName": "File Entitlement",
+      "domain": "SecurityAndCryptography",
+      "description": "Document access control list (ACL), envelope encryption key binding, and policy grant.",
+      "customProperties": {
+        "boundedContext": "resonance-crypto",
+        "idField": "entitlementId",
+        "partitionKeyPattern": "{tenantId}:FILE_ENTITLEMENT:{entitlementId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.FILE_ENTITLEMENT",
+        "asyncApiChannel": "resonance.crypto.entitlement.v1"
+      }
+    },
+    {
+      "name": "CONTROL_PLANE",
+      "displayName": "Control Plane Policy",
+      "domain": "ControlBillingAndEgress",
+      "description": "Tenant rate limiting, feature gates, and service mesh traffic control policies.",
+      "customProperties": {
+        "boundedContext": "resonance-control",
+        "idField": "policyId",
+        "partitionKeyPattern": "{tenantId}:CONTROL_PLANE:{policyId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.CONTROL_PLANE",
+        "asyncApiChannel": "resonance.control.policy.v1"
+      }
+    },
+    {
+      "name": "USAGE_METER",
+      "displayName": "Usage Meter",
+      "domain": "ControlBillingAndEgress",
+      "description": "Fine-grained token consumption, API calls, and billing meter aggregate.",
+      "customProperties": {
+        "boundedContext": "resonance-control",
+        "idField": "meterId",
+        "partitionKeyPattern": "{tenantId}:USAGE_METER:{meterId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "MEDIUM",
+        "defaultSaltBuckets": 8,
+        "cdcOutboxTopic": "resonance.outbox.USAGE_METER",
+        "asyncApiChannel": "resonance.control.meter.v1"
+      }
+    },
+    {
+      "name": "DELIVERY_PRODUCT",
+      "displayName": "Delivery Product",
+      "domain": "ControlBillingAndEgress",
+      "description": "Client-facing streaming package, SSE push target, or reactive output configuration.",
+      "customProperties": {
+        "boundedContext": "resonance-control",
+        "idField": "productId",
+        "partitionKeyPattern": "{tenantId}:DELIVERY_PRODUCT:{productId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.DELIVERY_PRODUCT",
+        "asyncApiChannel": "resonance.control.product.v1"
+      }
+    },
+    {
+      "name": "WEBHOOK_DISPATCH",
+      "displayName": "Webhook Dispatch",
+      "domain": "ControlBillingAndEgress",
+      "description": "Outbound signed HMAC-SHA256 webhook delivery attempt and retry status aggregate.",
+      "customProperties": {
+        "boundedContext": "resonance-webhook",
+        "idField": "dispatchId",
+        "partitionKeyPattern": "{tenantId}:WEBHOOK_DISPATCH:{dispatchId}",
+        "causalScope": "PER_AGGREGATE_INSTANCE",
+        "celebritySkewRisk": "LOW",
+        "defaultSaltBuckets": 1,
+        "cdcOutboxTopic": "resonance.outbox.WEBHOOK_DISPATCH",
+        "asyncApiChannel": "resonance.webhook.dispatch.v1"
+      }
+    }
+  ]
+}

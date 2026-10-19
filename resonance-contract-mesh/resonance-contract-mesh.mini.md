@@ -7,9 +7,9 @@ Use when defining AsyncAPI 3.0 channels, Protobuf (`proto3`) schemas, registerin
 * **Event IDL:** Protocol Buffers (`proto3`). Binary payloads stored in `outbox_events.payload` (`BYTEA`).
 * **Mesh Channel Topology:** AsyncAPI 3.0 (`src/main/asyncapi/asyncapi.yaml`).
 * **Schema Registry:** Apicurio Registry 3.x (`http://localhost:8086/apis/registry/v3`). Rule: `BACKWARD_TRANSITIVE` + `VALIDITY: FULL`.
-* **Domain Aggregate Catalog:** OpenMetadata standard manifest (`deploy/openmetadata/domain-glossary-manifest.json`) and catalog specification (`.agents/.contracts/domain-catalog.yaml`).
+* **Domain Aggregate Catalog:** OpenMetadata standard manifest ([`domain-glossary-manifest.json`](../docs/contracts/domain-glossary-manifest.json)) and catalog specification ([`domain-catalog.yaml`](../docs/contracts/domain-catalog.yaml)).
 * **Partition Key Topology:** `{tenantId}:{aggregateType}:{aggregateId}[#{saltBucket}]`.
-* **Publishing Engine:** PostgreSQL WAL CDC via Debezium `EventRouter`. Zero polling columns in Outbox table (ADR-0001).
+* **Publishing Engine:** PostgreSQL WAL CDC via Debezium `EventRouter`. Zero polling columns in Outbox table ([ADR-0001](../docs/adr/0001-transactional-outbox-event-structure.md)).
 
 ## DDIA Ch. 6 Skew Mitigation & Salt Bucket Matrix
 * **LOW Skew (1 bucket):** `INTENT`, `VFS_NODE`, `ORGANIZATION`, `SAGA_INSTANCE`, `INCIDENT_TICKET`. Key: `{tenantId}:{aggregateType}:{id}`.
