@@ -8,12 +8,12 @@ Accepted
 
 ## Context & Problem Statement
 
-The Resonance Platform relies on an asynchronous, decoupled event mesh (Redpanda) fed by the Transactional Outbox pattern (`outbox_events` + Debezium PostgreSQL WAL CDC) and consumed by Choreographed Sagas (`resonance-workflow`) and the Platform Brain (`resonance-unified-context`) (`README.md`, [`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md)).
+The Resonance Platform relies on an asynchronous, decoupled event mesh (Redpanda) fed by the Transactional Outbox pattern (`outbox_events` + Debezium PostgreSQL WAL CDC) and consumed by Choreographed Sagas (`resonance-workflow`) and the Platform Brain (`resonance-unified-context`) ([`README.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/README.md), [`ARCHITECTURE.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/ARCHITECTURE.md)).
 
-An architectural audit conducted in [`2026-10-17-research.md`](../research/2026-10-17-research.md) uncovered three critical deficiencies:
+An architectural audit conducted in [`2026-10-17-research.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/research/2026-10-17-research.md) uncovered three critical deficiencies:
 
-1. **Three-Way Contract Drift:** [`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md#L130) mandates Apache Avro (`.avsc`), [`.agents/.contracts/CONTRACTS.md`](../contracts/CONTRACTS.md#L9-L17) mandates Protocol Buffers (`proto3`), and the actual runtime services (`resonance-action`, `resonance-workflow`, `resonance-unified-context`) emit unvalidated JSON strings via `StringSerializer` stored in `TEXT` columns with zero schema registry integration.
-2. **Multi-Tenancy Fail-Open Defect (Invariant 4 Risk):** `OutboxEvent.java` silently defaults `tenantId` to `"default-tenant"` when null or blank, risking cross-tenant leakage on the event mesh.
+1. **Three-Way Contract Drift:** [`ARCHITECTURE.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/ARCHITECTURE.md#L130) mandates Apache Avro (`.avsc`), [`.agents/.contracts/CONTRACTS.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/.agents/.contracts/CONTRACTS.md#L9-L17) mandates Protocol Buffers (`proto3`), and the actual runtime services ([`resonance-action`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/resonance-office/front-office/resonance-action/src/main/resources/application.properties#L16), [`resonance-workflow`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/resonance-office/middle-office/resonance-workflow/src/main/resources/application.properties#L40), [`resonance-unified-context`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/resonance-unified-context/src/main/resources/application.yaml#L60)) emit unvalidated JSON strings via `StringSerializer` stored in `TEXT` columns with zero schema registry integration.
+2. **Multi-Tenancy Fail-Open Defect (Invariant 4 Risk):** [`OutboxEvent.java`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/resonance-office/front-office/resonance-action/src/main/java/com/resonancemachines/resonanceaction/entity/OutboxEvent.java#L60-L73) silently defaults `tenantId` to `"default-tenant"` when null or blank, risking cross-tenant leakage on the event mesh.
 3. **Outbox Producer Blind Spot:** Because Front-Office services publish events by inserting rows into PostgreSQL `outbox_events` (streamed by Debezium Connect) rather than calling `KafkaTemplate.send(...)` directly, code-scanning documentation tools cannot discover our event producers or validate payloads prior to database commit.
 
 We require a unified, 100% open-source event contract and schema governance architecture that enforces strict compile-time and pre-commit runtime validation across all 24 microservices while preserving our **$\le 4.0\text{ second}$ GraphRAG SLA**.
@@ -110,7 +110,7 @@ We selected **Option D**.
 
 ### Negative Consequences / Trade-offs
 - **Additional Stateless Service:** Adds `apicurio-registry` (`:8086`) to the deployment topology (though it reuses the existing PostgreSQL 16 instance).
-- **Schema Migration for `outbox_events`:** Requires a Flyway migration converting `outbox_events.payload` from `TEXT` to `BYTEA` and configuring Debezium with `BinaryDataConverter`.
+- **Clean-Slate BYTEA Schema Baseline:** In pre-production/greenfield environments, transitional `TEXT` to `BYTEA` table alterations (`ALTER TABLE ... USING convert_to()`) are eliminated in favor of designing `outbox_events.payload` directly as `BYTEA NOT NULL` in the baseline schema. Debezium Outbox `EventRouter` is configured with `io.debezium.converters.BinaryDataConverter` (with `value.converter.delegate.converter.type=org.apache.kafka.connect.json.JsonConverter` to delegate non-binary heartbeat/control structs) for zero-copy binary pass-through to Redpanda topics without JSON/Base64 wrapping.
 
 ---
 

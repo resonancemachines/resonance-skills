@@ -8,7 +8,7 @@ Accepted
 
 ## Context & Problem Statement
 
-The Resonance Platform guarantees strict data sovereignty, microservice decentralization, and continuous GraphRAG retrieval under a non-negotiable **4.0-second end-to-end SLA** ([`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md#L111-L122)). 
+The Resonance Platform guarantees strict data sovereignty, microservice decentralization, and continuous GraphRAG retrieval under a non-negotiable **4.0-second end-to-end SLA** ([`ARCHITECTURE.md`](../../ARCHITECTURE.md#L111-L122)). 
 
 Under the baseline architecture ([ADR 0002](../adr/0002-core-platform-architecture.md), [ADR 0003](../adr/0003-orchestrator.md), and [ADR 0004](../adr/0004-upload.md)):
 1. **Document Ingestion:** Resumable multipart uploads stream raw bytes directly to MinIO (`:9000`). Once assembled, `resonance-upload` records the event in its Outbox. `resonance-meta` extracts text via Apache Tika, and `resonance-unified-context` vectorizes chunks into PostgreSQL `pgvector` and projects semantic entities into Neo4j 5.20.
@@ -42,7 +42,7 @@ Under the baseline architecture ([ADR 0002](../adr/0002-core-platform-architectu
 ### Option B: Distributed Two-Phase Commit (2PC / XA) Across PostgreSQL and Neo4j
 * Wrap relational vector insertion and Neo4j graph entity projection in a distributed XA transaction coordinator to ensure atomic multi-store synchronization.
 * **Pros:** Immediate ACID consistency across relational and graph stores.
-* **Cons (Rejected):** Strictly violates **Architectural Invariant 1: No Two-Phase Commit** ([`README.md`](../../README.md#L140), [`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md#L138)). Introduces severe latency bottlenecks, tight runtime coupling, and cluster-wide blocking when any single database replica stalls.
+* **Cons (Rejected):** Strictly violates **Architectural Invariant 1: No Two-Phase Commit** ([`README.md`](../../README.md#L140), [`ARCHITECTURE.md`](../../ARCHITECTURE.md#L138)). Introduces severe latency bottlenecks, tight runtime coupling, and cluster-wide blocking when any single database replica stalls.
 
 ### Option C (Selected): Log-Based CDC (Debezium + Redpanda), Incremental Parameterized Cypher Delta Synchronization, and Two-Tier Event-Driven Semantic Caching
 * Use MinIO multipart uploads and bucket notifications to trigger ingestion sagas.

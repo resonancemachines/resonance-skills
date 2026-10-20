@@ -8,9 +8,9 @@ Accepted
 
 ## Context & Problem Statement
 
-The Resonance Platform's **Company Brain** serves as a decentralized cognitive backbone where autonomous AI agent swarms and human knowledge workers collaborate across multi-tenant enterprise organizations (`README.md`, [`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md)).
+The Resonance Platform's **Company Brain** serves as a decentralized cognitive backbone where autonomous AI agent swarms and human knowledge workers collaborate across multi-tenant enterprise organizations ([`README.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/README.md), [`ARCHITECTURE.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/ARCHITECTURE.md)).
 
-Prior to this decision ([ADR 0001](0001-transactional-outbox-event-structure.md), [ADR 0002](0002-core-platform-architecture.md), [ADR 0004](0004-upload.md), and [ADR 0005](ADR-0005-event-driven-graphrag-incremental-sync-hybrid-caching.md)):
+Prior to this decision ([ADR 0001](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/adr/0001-transactional-outbox-event-structure.md), [ADR 0002](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/adr/0002-core-platform-architecture.md), [ADR 0004](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/adr/0004-upload.md), and [ADR 0005](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/adr/ADR-0005-event-driven-graphrag-incremental-sync-hybrid-caching.md)):
 1. **Unstructured File Storage:** Multipart binary uploads streamed directly to MinIO (`:9000`), triggering asynchronous text extraction via Apache Tika (`resonance-meta`), dense vector embeddings in PostgreSQL `pgvector`, and flat entity extraction in Neo4j 5.20.
 2. **Missing Authoritative Hierarchical VFS Abstraction:** File assets lacked an authoritative relational Virtual File System (VFS) model tracking organizational folders, personal agent workspaces, team drives, and symlinks. File mutations (renames, moves, folder re-organizations, deletions) were uncoordinated across relational, vector, and graph datastores.
 3. **Retrieval Scoping Deficiency:** GraphRAG hybrid queries were forced to search across entire tenant corpora without directory-containment filters. Agents could not limit queries to specific project folders (e.g., `/drive/Engineering/Platform/v2/`), risking hallucinations, extraneous token usage, and cross-departmental information leakage.
@@ -27,7 +27,7 @@ We need a unified, resilient, cloud-agnostic architecture for Virtual File Syste
 | **Operational Overhead** | **Debezium CDC over PostgreSQL WAL + MinIO S3 Native Events** | Eliminates custom `@Scheduled` database pollers and file-watching daemons. All VFS mutations stream reactively via Write-Ahead Log (WAL) capture into Redpanda topics. 100% open-source primitives. |
 | **Scalability Boundaries** | **Presigned Multipart Ingestion + Content-Addressable Storage (CAS)** | Zero JVM heap buffering for binary payloads; direct client-to-MinIO data plane transfer. Deduplication via SHA-256 CAS prevents redundant storage and embedding inference. |
 | **Multi-Tenancy Isolation** | **Kernel PostgreSQL RLS + Neo4j `$tenantId` + ABAC Path Gate** | Relational `vfs_nodes` enforces PostgreSQL Row-Level Security; Neo4j Cypher strictly binds parameterized `$tenantId`; `resonance-entitlement` evaluates hierarchical path-prefix ACLs. |
-| **Developer Velocity** | **Java 21 Sealed Events + Spring Boot 4.x BOM Starters** | Strict Java 21 `record` and `sealed interface` types provide compile-time pattern matching; contracts managed via Apicurio Registry 3.x + AsyncAPI 3.0 ([ADR 0008](ADR-0008-asyncapi-apicurio-event-contract-governance.md)); zero classpath drift via `resonance-bom`. |
+| **Developer Velocity** | **Java 21 Sealed Events + Spring Boot / resonance-bom Starters** | Strict Java 21 `record` and `sealed interface` types provide compile-time pattern matching; contracts managed via Apicurio Registry 3.x + AsyncAPI 3.0 ([ADR 0008](file:///Users/jiyunkang/Projects/vibe/resonance-platform/docs/adr/ADR-0008-asyncapi-apicurio-event-contract-governance.md)); zero classpath drift via `resonance-bom`. |
 
 ---
 
@@ -41,7 +41,7 @@ We need a unified, resilient, cloud-agnostic architecture for Virtual File Syste
 ### Option B: Synchronous REST File Service with Distributed Two-Phase Commit (2PC / XA)
 * Create a centralized file service that coordinates file uploads, updates PostgreSQL metadata, updates Neo4j graph nodes, and updates vector indices within a single distributed XA transaction.
 * **Pros:** Immediate ACID consistency across relational, graph, and vector stores.
-* **Cons (Rejected):** Strictly violates **Architectural Invariant 1: No Two-Phase Commit** (`README.md`, [`ARCHITECTURE.md`](../architecture/ARCHITECTURE.md#L138)). Creates tight runtime coupling; a slow Neo4j or MinIO write blocks client HTTP threads, causing cascade timeouts and violating the 4.0s SLA.
+* **Cons (Rejected):** Strictly violates **Architectural Invariant 1: No Two-Phase Commit** ([`README.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/README.md#L141), [`ARCHITECTURE.md`](file:///Users/jiyunkang/Projects/vibe/resonance-platform/ARCHITECTURE.md#L138)). Creates tight runtime coupling; a slow Neo4j or MinIO write blocks client HTTP threads, causing cascade timeouts and violating the 4.0s SLA.
 
 ### Option C (Selected): Log-Based Virtual File System (VFS), Direct-to-Store MinIO Streaming, Choreographed Sagas, and Neo4j Graph Cosmos Projection
 * Store raw file binaries in MinIO via direct presigned multipart URLs negotiated with `resonance-upload`.

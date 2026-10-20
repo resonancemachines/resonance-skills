@@ -1,7 +1,7 @@
 # System Architecture: Resonance Platform
 
 > Last updated: 2026-10-18  
-> Frameworks & Governance: [`GUARDRAILS.md`](../guardrails/GUARDRAILS.md) (Executable Rules) | [`HARNESS_ENGINEERING.md`](../HARNESS_ENGINEERING.md) (Harness Framework) | [`ADR-0010`](../adr/0010-target-infrastructure-topology-and-governance.md) (Target Infrastructure)
+> Frameworks & Governance: [`GUARDRAILS.md`](GUARDRAILS.md) (Executable Rules) | [`docs/HARNESS_ENGINEERING.md`](docs/HARNESS_ENGINEERING.md) (Harness Framework) | [`ADR-0010`](docs/adr/ADR-0010-target-infrastructure-topology-and-governance.md) (Target Infrastructure)
 
 ## 1. System Overview
 
@@ -137,7 +137,7 @@ Resonance is an enterprise-grade, decentralized microservices platform designed 
 
 ## 5. Architectural Invariants & Governance
 
-All invariants below are continuously enforced at runtime, `mvn test`, and `.git/hooks/pre-commit` per [GUARDRAILS.md](../guardrails/GUARDRAILS.md) and [ADR-0009](../adr/0009-executable-architecture-and-change-management-guardrails.md):
+All invariants below are continuously enforced at runtime, `mvn test`, and `.git/hooks/pre-commit` per [GUARDRAILS.md](GUARDRAILS.md) and [ADR-0009](docs/adr/ADR-0009-executable-architecture-and-change-management-guardrails.md):
 
 1. **No Two-Phase Commit:** Distributed transactions MUST use Choreographed Sagas with explicit compensating transactions.
 2. **Zero Plaintext PII in Mesh:** All PII tokenized at the edge before event emission.
@@ -151,7 +151,7 @@ All invariants below are continuously enforced at runtime, `mvn test`, and `.git
 
 ## 6. Infrastructure Topology
 
-See [TOPOLOGY.md](../contracts/TOPOLOGY.md) for complete port allocations.
+See [TOPOLOGY.md](.agents/.contracts/TOPOLOGY.md) for complete port allocations.
 
 ### Local Development Stack (Docker Compose)
 
